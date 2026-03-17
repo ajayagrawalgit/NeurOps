@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  redfish-simulator:
+    build: .
+    container_name: redfish_simulator
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./emulator-data:/app/emulator
+    restart: unless-stopped
+
+  # Optional: your NeurOps AI service (future expansion)
+  neurops-engine:
+    image: python:3.11-slim
+    container_name: neurops_engine
+    working_dir: /app
+    volumes:
+      - ./neurops:/app
+    command: ["sleep", "infinity"]
+    depends_on:
+      - redfish-simulator
