@@ -1,0 +1,38 @@
+{
+    "type": "record",
+    "name": "Telemetry",
+    "fields": [
+        {
+            "name": "timestamp",
+            "type": "string"
+        },
+        {
+            "name": "device_id",
+            "type": "string"
+        },
+        {
+            "name": "cpu_usage",
+            "type": "double"
+        },
+        {
+            "name": "memory_usage",
+            "type": "double"
+        },
+        {
+            "name": "temperature",
+            "type": "double"
+        },
+        {
+            "name": "power_state",
+            "type": "string"
+        },
+        {
+            "name": "health_status",
+            "type": "string"
+        },
+        {
+            "name": "raw_json",
+            "type": "string"
+        }
+    ]
+}
