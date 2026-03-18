@@ -5,20 +5,29 @@ import random
 from datetime import datetime, timezone
 from google.cloud import pubsub_v1
 
+import sys
+import os
+
+# Ensure the parent directory is in sys.path so we can import helpers
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from helpers import load_configs
+
 # ==============================
 # CONFIG
 # ==============================
-PROJECT_ID = "bnb-apex"
-TOPIC_ID = "telemetry-topic"
+_CONFIG = load_configs()
+PROJECT_ID = _CONFIG.get("PROJECT_ID", "bnb-apex")
+TOPIC_ID = _CONFIG.get("TOPIC_ID", "telemetry-topic")
 
-POLL_INTERVAL = 10  # seconds
+POLL_INTERVAL = _CONFIG.get("POLL_INTERVAL", 10)  # seconds
 
 # 🖥️ MULTIPLE SERVERS
-SERVERS = [
+SERVERS = _CONFIG.get("SERVERS", [
     {"id": "server-1", "url": "http://localhost:8000/redfish/v1/Systems"}
-    # {"id": "server-2", "url": "http://localhost:8001/redfish/v1/Systems"},
-    # {"id": "server-3", "url": "http://localhost:8002/redfish/v1/Systems"},
-]
+])
+
+USE_PROXY = _CONFIG.get("USE_PROXY", True)
+PROXY_BASE = _CONFIG.get("PROXY_BASE", "http://localhost:8080")
 
 
 # ==============================
@@ -47,15 +56,14 @@ def fetch_redfish_data(url):
 def parse_metrics(server_id, data):
     try:
         members = data.get("Members", [])
-        system = members[0] if members else {}
+        system = members[0] if members else data
 
-        # Slight variation per server
+        # Slight variation per server default
         base = random.uniform(0, 1)
 
-        cpu = round(40 + 30 * base, 2)
-        memory = round(60 + 20 * base, 2)
-        temp = round(65 + 20 * base, 2)
-
+        cpu = system.get("CPU", {}).get("UsagePercent", round(40 + 30 * base, 2))
+        memory = system.get("Memory", {}).get("UsagePercent", round(60 + 20 * base, 2))
+        temp = system.get("Temperature", {}).get("ReadingCelsius", round(65 + 20 * base, 2))
         power = system.get("PowerState", "On")
 
         metrics = {
@@ -112,10 +120,16 @@ def run():
 
     while True:
         for server in SERVERS:
-            data = fetch_redfish_data(server["url"])
+            server_id = server["id"]
+            if USE_PROXY:
+                url = f"{PROXY_BASE}/redfish/{server_id}/v1/Systems"
+            else:
+                url = server["url"]
+
+            data = fetch_redfish_data(url)
 
             if data:
-                metrics = parse_metrics(server["id"], data)
+                metrics = parse_metrics(server_id, data)
 
                 if metrics:
                     publish(metrics)
