@@ -5,8 +5,11 @@ import time
 import sys
 import os
 from enum import Enum
+from typing import Dict, Any
 
-# Ensure the parent directory is in sys.path so we can import helpers
+# -------------------------------
+# 🔧 Load Config
+# -------------------------------
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from helpers import load_configs
 
@@ -14,25 +17,32 @@ _CONFIG = load_configs()
 
 app = FastAPI(title="NeurOps Redfish Chaos Proxy")
 
-# 🔗 Load Servers from config
-SERVERS = _CONFIG.get("SERVERS", [])
-if not SERVERS:
-    # Fallback if empty config
-    SERVERS = [{"id": "server-1", "url": "http://localhost:8000/redfish/v1/Systems"}]
+# -------------------------------
+# 🌐 Server Registry
+# -------------------------------
+def build_server_map(config):
+    servers = config.get("SERVERS", [])
+    return {s["id"]: s["url"] for s in servers}
 
-SERVER_MAP = {server["id"]: server["url"] for server in SERVERS}
 
-# Auto-populate dropdown using Enum
-# Enum("Name", {"KEY": "value"})
+SERVER_MAP: Dict[str, str] = build_server_map(_CONFIG)
+
+if not SERVER_MAP:
+    raise RuntimeError("No servers configured in config.yaml")
+
+# Enum for Swagger dropdown
 ServerEnum = Enum("ServerEnum", {s: s for s in SERVER_MAP.keys()})
 
-# 🧠 Override layer (ONLY stores simulated changes, partitioning by server_id)
-overrides = {s: {} for s in SERVER_MAP.keys()}
+# 🧠 Override layer (per server)
+overrides: Dict[str, Dict[str, Any]] = {
+    s: {} for s in SERVER_MAP.keys()
+}
+
 
 # -------------------------------
 # 📡 Fetch Real Redfish Data
 # -------------------------------
-def get_real_redfish(url):
+def get_real_redfish(url: str):
     try:
         response = requests.get(url, timeout=5)
         response.raise_for_status()
@@ -42,59 +52,92 @@ def get_real_redfish(url):
 
 
 # -------------------------------
-# 🧬 Merge Overrides
+# 🧬 Deep Merge (SAFE override)
 # -------------------------------
-def apply_overrides(server_id, data):
+def deep_merge(original: dict, override: dict):
+    for key, value in override.items():
+        if (
+            key in original
+            and isinstance(original[key], dict)
+            and isinstance(value, dict)
+        ):
+            deep_merge(original[key], value)
+        else:
+            original[key] = value
+    return original
+
+
+def apply_overrides(server_id: str, data: dict):
     if not isinstance(data, dict):
         return data
-    
-    server_overrides = overrides.get(server_id, {})
-    
-    if "Members" in data and isinstance(data["Members"], list):
-        if len(data["Members"]) == 0:
-            data["Members"].append({})
+
+    server_override = overrides.get(server_id, {})
+
+    if "Members" in data and isinstance(data["Members"], list) and data["Members"]:
         system = data["Members"][0]
-        for key, value in server_overrides.items():
-            system[key] = value
-    else:
-        for key, value in server_overrides.items():
-            data[key] = value
-            
-    return data
+        return deep_merge(system, server_override)
+
+    return deep_merge(data, server_override)
 
 
 # -------------------------------
-# 📡 Redfish Proxy Endpoint
+# 📡 Proxy Endpoints
 # -------------------------------
+@app.get("/")
+def root():
+    return {
+        "message": "NeurOps Chaos Proxy Running 🚀",
+        "servers": list(SERVER_MAP.keys()),
+        "docs": "/docs"
+    }
+
+
+@app.get("/health")
+def health():
+    status = {}
+
+    for server_id, url in SERVER_MAP.items():
+        try:
+            res = requests.get(url, timeout=2)
+            status[server_id] = "UP" if res.status_code == 200 else "DOWN"
+        except:
+            status[server_id] = "DOWN"
+
+    return status
+
+
 @app.get("/redfish/{server_id}/v1/Systems")
 def proxy_redfish(server_id: ServerEnum):
     url = SERVER_MAP.get(server_id.value)
+
     if not url:
         raise HTTPException(status_code=404, detail="Server not found")
-        
+
     real_data = get_real_redfish(url)
     return apply_overrides(server_id.value, real_data)
 
 
-# -------------------------------
-# 🚨 Chaos APIs (Override Layer)
-# -------------------------------
+@app.get("/redfish/v1/all-systems")
+def get_all_systems():
+    results = {}
 
+    for server_id, url in SERVER_MAP.items():
+        data = get_real_redfish(url)
+        results[server_id] = apply_overrides(server_id, data)
+
+    return results
+
+
+# -------------------------------
+# 🚨 Chaos APIs
+# -------------------------------
 @app.post("/simulate/{server_id}/cpu/spike")
 def cpu_spike(server_id: ServerEnum):
-    overrides[server_id.value]["CPU"] = {
+    overrides[server_id.value]["Processors"] = {
         "UsagePercent": 95,
         "Status": {"Health": "Critical"}
     }
     return {"message": f"CPU spike injected for {server_id.value}"}
-
-
-@app.post("/simulate/{server_id}/disk/failure")
-def disk_failure(server_id: ServerEnum):
-    overrides[server_id.value]["Disk"] = {
-        "Status": {"Health": "Critical", "State": "Failed"}
-    }
-    return {"message": f"Disk failure injected for {server_id.value}"}
 
 
 @app.post("/simulate/{server_id}/memory/leak")
@@ -106,10 +149,18 @@ def memory_leak(server_id: ServerEnum):
     return {"message": f"Memory leak injected for {server_id.value}"}
 
 
+@app.post("/simulate/{server_id}/disk/failure")
+def disk_failure(server_id: ServerEnum):
+    overrides[server_id.value]["Storage"] = {
+        "Status": {"Health": "Critical", "State": "Failed"}
+    }
+    return {"message": f"Disk failure injected for {server_id.value}"}
+
+
 @app.post("/simulate/{server_id}/temperature/high")
 def temp_high(server_id: ServerEnum):
-    overrides[server_id.value]["Temperature"] = {
-        "ReadingCelsius": 95,
+    overrides[server_id.value]["Thermal"] = {
+        "TemperatureCelsius": 95,
         "Status": {"Health": "Critical"}
     }
     return {"message": f"High temperature injected for {server_id.value}"}
@@ -124,21 +175,51 @@ def power_off(server_id: ServerEnum):
 @app.post("/simulate/{server_id}/reset")
 def reset(server_id: ServerEnum):
     overrides[server_id.value].clear()
-    return {"message": f"All simulations cleared for {server_id.value}"}
+    return {"message": f"Reset simulations for {server_id.value}"}
 
 
 # -------------------------------
 # 🧪 Gradual Degradation
 # -------------------------------
-def gradual_cpu(server_id_val):
-    for i in range(50, 100, 5):
-        overrides[server_id_val]["CPU"] = {
+def gradual_cpu(server_id_val: str):
+    for i in range(50, 101, 5):
+        overrides[server_id_val]["Processors"] = {
             "UsagePercent": i,
-            "Status": {"Health": "Warning" if i < 90 else "Critical"}
+            "Status": {
+                "Health": "Warning" if i < 90 else "Critical"
+            }
         }
         time.sleep(2)
 
+
 @app.post("/simulate/{server_id}/cpu/gradual")
 def cpu_gradual(server_id: ServerEnum):
-    threading.Thread(target=gradual_cpu, args=(server_id.value,)).start()
+    threading.Thread(
+        target=gradual_cpu,
+        args=(server_id.value,),
+        daemon=True
+    ).start()
+
     return {"message": f"Gradual CPU degradation started for {server_id.value}"}
+
+
+# -------------------------------
+# 🔄 Reload Config (dynamic scaling)
+# -------------------------------
+@app.post("/reload-config")
+def reload_config():
+    global SERVER_MAP, overrides, ServerEnum
+
+    new_config = load_configs()
+    SERVER_MAP = build_server_map(new_config)
+
+    if not SERVER_MAP:
+        raise HTTPException(status_code=500, detail="No servers found")
+
+    overrides = {s: {} for s in SERVER_MAP.keys()}
+    ServerEnum = Enum("ServerEnum", {s: s for s in SERVER_MAP.keys()})
+
+    return {
+        "message": "Config reloaded successfully",
+        "servers": list(SERVER_MAP.keys())
+    }

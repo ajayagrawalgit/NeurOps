@@ -1,9 +1,14 @@
 PROJECT_ID: "bnb-apex"
 TOPIC_ID: "telemetry-topic"
 POLL_INTERVAL: 10
+
 SERVERS:
   - id: "server-1"
-    url: "http://localhost:8000/redfish/v1/Systems"
-REDFISH_BASE: "http://localhost:8000/redfish/v1/Systems"
+    url: "http://localhost:8001/redfish/v1/Systems"
+  - id: "server-2"
+    url: "http://localhost:8002/redfish/v1/Systems"
+  - id: "server-3"
+    url: "http://localhost:8003/redfish/v1/Systems"
+
 PROXY_BASE: "http://localhost:8080"
 USE_PROXY: true
