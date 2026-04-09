@@ -1,7 +1,7 @@
-PYTHON = ./.venv/bin/python3
-UVICORN = ./.venv/bin/uvicorn
+PYTHON = /home/mickey/DevSpace/mylab/bin/python3
+UVICORN = /home/mickey/DevSpace/mylab/bin/uvicorn
 
-.PHONY: startneurosight stopneurosight startneuriosim stopneuriosim startchaosrouters stopchaosrouters
+.PHONY: startneurosight stopneurosight startneuriosim stopneuriosim startchaosrouters stopchaosrouters startneurotalk stopneurotalk
 
 startneurosight:
 	@echo "🚀 Starting Neurosight..."
@@ -32,3 +32,13 @@ stopchaosrouters:
 	@echo "🛑 Stopping Chaos Routers..."
 	@if [ -f chaos.pid ]; then kill $$(cat chaos.pid) 2>/dev/null && rm chaos.pid; else pkill -f chaos_management_routers || true; fi
 	@echo "✅ Chaos Routers stopped."
+
+startneurotalk:
+	@echo "🚀 Starting NeuroTalk (Streamlit)..."
+	@nohup $(PYTHON) -m streamlit run neurotalk_app.py --server.port 8501 > neurotalk.log 2>&1 & echo $$! > neurotalk.pid
+	@echo "✅ NeuroTalk started."
+
+stopneurotalk:
+	@echo "🛑 Stopping NeuroTalk..."
+	@if [ -f neurotalk.pid ]; then kill $$(cat neurotalk.pid) 2>/dev/null && rm neurotalk.pid; else pkill -f streamlit || true; fi
+	@echo "✅ NeuroTalk stopped."

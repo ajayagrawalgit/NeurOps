@@ -65,3 +65,30 @@ def load_configs():
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
     return config if config else {}
+
+async def run_agent(agent, prompt: str):
+    """
+    Executes an ADK agent using a Runner and returns simplified text output.
+    """
+    from google.adk.runners import Runner
+    from google.adk.sessions.in_memory_session_service import InMemorySessionService
+    from google.genai import types
+
+    runner = Runner(
+        agent=agent,
+        app_name="NeuroTalk",
+        session_service=InMemorySessionService(),
+        auto_create_session=True
+    )
+
+    output = ""
+    async for event in runner.run_async(
+        user_id="streamlit_user",
+        session_id="chat_session",
+        new_message=types.Content(role="user", parts=[types.Part(text=prompt)])
+    ):
+        if event.content and event.content.parts:
+            # Combine text parts, skipping 'thoughts'
+            output += "".join(p.text for p in event.content.parts if p.text and not p.thought)
+    
+    return output
