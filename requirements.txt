@@ -1,0 +1,19 @@
+# NeurOps Dependency List
+# Install with: pip install -r requirements.txt
+
+# --- Core Frameworks ---
+fastapi>=0.100.0
+uvicorn>=0.23.0
+streamlit>=1.25.0
+pydantic>=2.0.0
+requests>=2.31.0
+PyYAML>=6.0.1
+
+# --- Google Cloud Stack ---
+google-cloud-pubsub>=2.18.0
+google-cloud-bigquery>=3.11.0
+google-adk>=0.1.0  # Note: Ensure internal/standard version compatibility
+google-genai>=0.1.0
+
+# --- Hardware Emulation (Neurosim) ---
+sushy-tools>=0.22.0
