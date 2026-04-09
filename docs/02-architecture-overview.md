@@ -29,7 +29,7 @@ graph TD
     Sight --> PubSub
     PubSub -.-> BQ
     ADK -- Tools --> Sight
-    ADK -- Tools -.-> BQ
+    ADK -. Tools .-> BQ
     UI -- Chat --> ADK
 ```
 
