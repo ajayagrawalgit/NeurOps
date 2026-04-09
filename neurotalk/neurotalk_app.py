@@ -4,11 +4,11 @@ import os
 import sys
 from datetime import datetime
 
-# Ensure project root is in path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Ensure project root is in path to find helpers.py
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from neurotalk.agent import agent
-from neurotalk.tools import get_live_status
+from agent import agent
+from tools import get_live_status
 
 # --- Page Config ---
 st.set_page_config(
@@ -114,4 +114,4 @@ if prompt := st.chat_input("Ask about system health, historical issues, or anoma
 
 # --- Footer ---
 st.markdown("---")
-st.markdown(f"**Last Sync:** {datetime.now().strftime('%H:%M:%S')} | Environment: `mylab`")
+st.markdown(f"**Last Sync:** {datetime.now().strftime('%H:%M:%S')}")
