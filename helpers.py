@@ -59,12 +59,28 @@ def load_configs():
     
     base_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(base_dir, "config.yaml")
-    if not os.path.exists(config_path):
-        return {}
-        
-    with open(config_path, "r") as f:
-        config = yaml.safe_load(f)
-    return config if config else {}
+    
+    config = {}
+    if os.path.exists(config_path):
+        with open(config_path, "r") as f:
+            config = yaml.safe_load(f) or {}
+
+    # Overlay environment variables for production flexibility
+    # High-priority keys that often change between environments
+    env_keys = ["PROJECT_ID", "TOPIC_ID", "POLL_INTERVAL", "PROXY_BASE", "USE_PROXY"]
+    for key in env_keys:
+        env_val = os.environ.get(key)
+        if env_val is not None:
+            # Handle type conversion for bools and ints
+            if key == "POLL_INTERVAL":
+                try: config[key] = int(env_val)
+                except: pass
+            elif key == "USE_PROXY":
+                config[key] = env_val.lower() == "true"
+            else:
+                config[key] = env_val
+                
+    return config
 
 async def run_agent(agent, prompt: str):
     """
