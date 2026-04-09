@@ -1,0 +1,14 @@
+PROJECT_ID: "YOUR_PROJECT_ID_HERE"
+TOPIC_ID: "YOUR_TOPIC_ID_HERE"
+POLL_INTERVAL: 10
+
+SERVERS:
+  - id: "server-1"
+    url: "http://localhost:8001/redfish/v1/Systems"
+  - id: "server-2"
+    url: "http://localhost:8002/redfish/v1/Systems"
+  - id: "server-3"
+    url: "http://localhost:8003/redfish/v1/Systems"
+
+PROXY_BASE: "http://localhost:8080"
+USE_PROXY: true

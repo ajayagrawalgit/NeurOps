@@ -1,0 +1,24 @@
+services:
+  redfish-1:
+    build: .
+    container_name: redfish_1
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./emulator-data/server1:/app/emulator
+
+  redfish-2:
+    build: .
+    container_name: redfish_2
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./emulator-data/server2:/app/emulator
+
+  redfish-3:
+    build: .
+    container_name: redfish_3
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./emulator-data/server3:/app/emulator
