@@ -1,8 +1,9 @@
+# 🧠 NeurOps
+
 <p align="center">
 <img width="3125" height="1500" alt="NeurOps" src="https://github.com/user-attachments/assets/de4c3242-a65a-4321-af2e-5238aea5f657" />
 </p>
 
-# 🧠 NeurOps Ecosystem
 **Enterprise-Grade AI Infrastructure Observability & Chaos Engineering**
 
 [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
