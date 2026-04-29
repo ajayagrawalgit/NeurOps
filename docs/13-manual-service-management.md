@@ -78,6 +78,8 @@ https://github.com/user-attachments/assets/cf0b9330-9a75-4c46-90d4-eba2fc44dce9
 streamlit run neurotalk/neurotalk_app.py --server.port 8501
 ```
 
+[Screencast from 2026-04-29 16-47-27.webm](https://github.com/user-attachments/assets/054dc5ca-aac0-4348-96e6-b64c19190700)
+
 ### 🛑 To Stop:
 Hit `Ctrl+C` in the terminal, or use:
 ```bash
