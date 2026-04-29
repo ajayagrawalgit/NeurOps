@@ -18,8 +18,11 @@ NeurOps exposes several APIs to manage hardware simulation, inject chaos, and in
 - **Description**: Forces the temperature reading to 95°C.
 - **Response**: `{"message": "High temperature injected for server-1"}`
 
-#### `POST /simulate/{server_id}/disk/failure`
-- **Description**: Sets the storage status to `Failed` and Health to `Critical`.
+#### `POST /simulate/{server_id}/power/off`
+- **Description**: Forces the `PowerState` to `Off` for the specified server.
+
+#### `POST /simulate/{server_id}/power/on`
+- **Description**: Sets the `PowerState` back to `On`.
 
 #### `POST /simulate/{server_id}/reset`
 - **Description**: Clears all active simulations for the target server and returns it to its base state.

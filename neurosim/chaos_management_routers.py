@@ -172,6 +172,14 @@ def power_off(server_id: ServerEnum):
     return {"message": f"Power OFF simulated for {server_id.value}"}
 
 
+@app.post("/simulate/{server_id}/power/on")
+def power_on(server_id: ServerEnum):
+    # Set PowerState to On. We can also just clear the override if we want base state, 
+    # but explicitly setting 'On' is clearer.
+    overrides[server_id.value]["PowerState"] = "On"
+    return {"message": f"Power ON simulated for {server_id.value}"}
+
+
 @app.post("/simulate/{server_id}/reset")
 def reset(server_id: ServerEnum):
     overrides[server_id.value].clear()

@@ -27,7 +27,8 @@ def get_live_status() -> dict:
             url = f"{proxy_base}/redfish/{sid}/v1/Systems"
             res = requests.get(url, timeout=3).json()
 
-            system = res.get("Members", [{}])[0]
+            # The proxy unwraps Members[0] for us, so res is the system object
+            system = res
 
             # Add fallbacks for simulation clarity (consistent with neurosight.py)
             results[sid] = {
@@ -44,8 +45,22 @@ def get_live_status() -> dict:
     return results
 
 
+def get_redfish_status(server_id: str) -> dict:
+    """Fetch full Redfish system telemetry for a specific server_id"""
+    config = load_configs()
+    proxy_base = config.get("PROXY_BASE")
+    
+    try:
+        url = f"{proxy_base}/redfish/{server_id}/v1/Systems"
+        res = requests.get(url, timeout=3)
+        res.raise_for_status()
+        return res.json()
+    except Exception as e:
+        return {"error": f"Failed to fetch Redfish status for {server_id}: {str(e)}"}
+
+
 def get_past_issues(device_id: str) -> list:
-    """Fetch last 10 telemetry records for a given device"""
+    """Fetch last 10 telemetry records for a given device from BigQuery"""
     config = load_configs()
     project_id = config.get("PROJECT_ID")
     bq_client = bigquery.Client(project=project_id)
