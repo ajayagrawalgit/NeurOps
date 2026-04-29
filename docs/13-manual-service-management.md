@@ -47,12 +47,17 @@ docker compose -f neurosim/docker-compose.yml down
 ---
 
 ## 🌀 3. Chaos Management Routers
-This FastAPI app handles the chaos injection and auto-healing hooks.
+This FastAPI app handles the chaos injection and auto-healing hooks. You can definitely use cUrl Commands from your terminal to utilise these APIs but hey, Below is a quick short demo of how you can use it using the Swagger UI:
+
+https://github.com/user-attachments/assets/e1874d56-0918-421c-95b5-766228dd6546
+
 
 ### 🚀 To Start:
 ```bash
 uvicorn neurosim.chaos_management_routers:app --host 0.0.0.0 --port 8080
 ```
+
+https://github.com/user-attachments/assets/775c4fe4-5875-4586-aa8a-e62f35988a9d
 
 ### 🛑 To Stop:
 Hit `Ctrl+C` in the terminal where it's running, or use:
@@ -63,7 +68,10 @@ pkill -f chaos_management_routers
 ---
 
 ## 🧠 4. NeuroTalk UI (Streamlit)
-The beautiful dashboard where you chat with your infrastructure!
+The chatbot using which you can literally talk to your infrastructure ╰(*°▽°*)╯
+
+https://github.com/user-attachments/assets/cf0b9330-9a75-4c46-90d4-eba2fc44dce9
+
 
 ### 🚀 To Start:
 ```bash
