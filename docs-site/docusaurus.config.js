@@ -2,7 +2,7 @@
 
 module.exports = {
   title: 'NeurOps',
-  tagline: 'Next Generation Neural Operations',
+  tagline: 'Enterprise-Grade AI Infrastructure Observability & Chaos Engineering',
   url: 'https://neurops.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
