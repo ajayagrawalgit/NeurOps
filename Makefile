@@ -2,7 +2,7 @@ PYTHON ?= $(shell which python3 2>/dev/null || which python 2>/dev/null || echo 
 UVICORN ?= $(shell which uvicorn 2>/dev/null || echo uvicorn)
 LOG_DIR = logs
 
-.PHONY: startneurosight stopneurosight startneuriosim stopneuriosim startchaosrouters stopchaosrouters startneurotalk stopneurotalk init-logs startneurops stopneurops status check-docker
+.PHONY: startneurosight stopneurosight startneurosim stopneurosim startchaosrouters stopchaosrouters startneurotalk stopneurotalk init-logs startneurops stopneurops status check-docker
 
 init-logs:
 	@mkdir -p $(LOG_DIR)
@@ -17,12 +17,12 @@ stopneurosight:
 	@if [ -f $(LOG_DIR)/neurosight.pid ]; then kill $$(cat $(LOG_DIR)/neurosight.pid) 2>/dev/null && rm $(LOG_DIR)/neurosight.pid; else pkill -f neurosight.py || true; fi
 	@echo "✅ Neurosight stopped."
 
-startneuriosim:
+startneurosim:
 	@echo "🚀 Starting Neurosim (Docker Compose)..."
 	@docker compose -f neurosim/docker-compose.yml up -d
 	@echo "✅ Neurosim started."
 
-stopneuriosim:
+stopneurosim:
 	@echo "🛑 Stopping Neurosim (Docker Compose)..."
 	@docker compose -f neurosim/docker-compose.yml down
 	@echo "✅ Neurosim stopped."
@@ -82,7 +82,7 @@ stopneurops:
 	@$(MAKE) stopneurotalk
 	@$(MAKE) stopchaosrouters
 	@$(MAKE) stopneurosight
-	@$(MAKE) stopneuriosim
+	@$(MAKE) stopneurosim
 	@echo "✅ All services stopped."
 
 status:

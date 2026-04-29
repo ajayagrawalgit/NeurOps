@@ -82,9 +82,10 @@ Open `http://localhost:8501` to start chatting with **NeuroTalk**.
 | **[🚀 Introduction](docs/01-introduction.md)** | Mission, value, and high-level overview. |
 | **[🏗️ Architecture](docs/02-architecture-overview.md)** | Technical design and tech stack details. |
 | **[🌊 Project Flow](docs/03-project-flow.md)** | The journey of a metric (Step-by-step lifecycle). |
-| **[🛠️ Setup Guide](docs/05-setup-guide.md)** | detailed onboarding and environmental cleanup. |
+| **[🛠️ Setup Guide](docs/05-setup-guide.md)** | Detailed onboarding and environmental cleanup. |
 | **[📖 API Reference](docs/09-api-reference.md)** | Chaos Proxy and NeuroTalk API specs. |
 | **[🔍 Troubleshooting](docs/10-debugging-troubleshooting.md)** | Common errors, logs, and diagnostic commands. |
+| **[⚙️ Manual Management](docs/13-manual-service-management.md)** | Step-by-step commands to run services without the Makefile. |
 
 ### Module Deep Dives
 - **[🕹️ Simulation Layer](docs/04-module-breakdown/simulation.md)**

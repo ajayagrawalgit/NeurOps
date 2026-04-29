@@ -111,6 +111,9 @@ NeurOps is orchestrated via a powerful Makefile. To start everything (Simulators
 make startneurops
 ```
 
+> [!TIP]
+> If you prefer to run services individually without using `make`, check out our [Manual Service Management Guide](13-manual-service-management.md)! 🛠️
+
 ### What happens next?
 - You will see a waterfall of "Starting..." messages.
 - A **Status Report** will appear with PIDs for all services.

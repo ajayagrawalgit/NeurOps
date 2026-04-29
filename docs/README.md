@@ -19,6 +19,7 @@ Welcome to the central documentation repository for NeurOps. Here you will find 
 - **[🔍 Troubleshooting](10-debugging-troubleshooting.md)**: Common errors and diagnostic guides.
 - **[🤝 Contribution Guide](11-contribution-guide.md)**: Coding standards and workflow.
 - **[❓ FAQ](12-faq.md)**: Quick answers to common questions.
+- **[⚙️ Manual Management](13-manual-service-management.md)**: Individual commands to start/stop services.
 
 ---
 > [!TIP]

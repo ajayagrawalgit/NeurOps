@@ -52,7 +52,7 @@ st.markdown("""
 # --- Sidebar: Server Status ---
 with st.sidebar:
     st.image("https://img.icons8.com/isometric/512/brain.png", width=80)
-    st.title("NeurOps Sight")
+    st.title("NeurOps | NeuroTalk")
     st.markdown("### 🖥️ Real-time Telemetry")
     
     status_data = get_live_status()
