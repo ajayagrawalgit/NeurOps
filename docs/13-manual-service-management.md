@@ -99,6 +99,6 @@ pkill -f streamlit
 ## 💡 Pro-Tips for Manual Management
 - **Logs**: If you run things manually in separate terminals, you'll see the logs right there! It's great for debugging. 🔍
 - **Order Matters**: Usually, you'll want to start the Simulators first, then the Chaos Routers, then Neurosight, and finally the UI. 🚦
-- **Environment**: Always double-check that your `mylab` virtual environment is active before running the Python commands.
+- **Environment**: Always double-check that your virtual environment in which all your packages are installed is active before running the Python commands.
 
 Happy hacking! 👩‍💻👨‍💻
