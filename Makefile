@@ -1,5 +1,5 @@
-PYTHON = /home/mickey/DevSpace/mylab/bin/python3
-UVICORN = /home/mickey/DevSpace/mylab/bin/uvicorn
+PYTHON ?= $(shell which python3 2>/dev/null || which python 2>/dev/null || echo python3)
+UVICORN ?= $(shell which uvicorn 2>/dev/null || echo uvicorn)
 LOG_DIR = logs
 
 .PHONY: startneurosight stopneurosight startneuriosim stopneuriosim startchaosrouters stopchaosrouters startneurotalk stopneurotalk init-logs startneurops stopneurops status check-docker
