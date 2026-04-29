@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo_transparent.png" width="200" alt="NeurOps Logo">
+  <img src="docs/assets/logo_transparent.png" width="220" alt="NeurOps Logo">
 </p>
 
 # 🧠 NeurOps Ecosystem
@@ -11,25 +11,36 @@
 
 NeurOps is a production-grade platform designed to bridge the gap between raw hardware telemetry and intelligent operational response. While this repository includes **Redfish Emulation** for rapid validation and chaos testing, the core architecture is engineered to scale across enterprise data centers, managing real-world hardware telemetry via standard Redfish APIs.
 
-https://github.com/user-attachments/assets/6a603b2f-0a0e-4c74-ad5c-6f63d287dd30
-
 ---
 
-### 🛡️ Production Readiness
-NeurOps is built for more than just simulation. Every component - from the **Neurosight Collector** to the **NeuroTalk AI Agent** - is designed to consume real hardware data. To move from the default validation environment to a production workload, simply swap the Redfish URLs in your `config.yaml` with your actual BMC (Baseboard Management Controller) endpoints.
+## 🎬 Guided Walkthroughs & Demos
+New to NeurOps? Check out our video-guided steps to see the ecosystem in action! 🎥
 
-#### 🩹 Autonomous Remediation Hooks
-The **Auto-Healing** API endpoints provided in the Chaos Proxy are currently simulated recovery actions. However, these are designed as standardized hooks for production workloads. Engineers can tie their own automation logic (e.g., Ansible playbooks, Jenkins jobs, or direct Redfish Reset commands) to these endpoints, enabling the AI to trigger real remediation actions in a production data center.
+- **[🚀 Full Workflow Demo](docs/13-manual-service-management.md#4-neurotalk-ui-streamlit)**: See how the AI interacts with real-time chaos events.
+- **[🛠️ Manual Service Management](docs/13-manual-service-management.md)**: A step-by-step video guide on starting and stopping every service individually.
+- **[🌀 Chaos Injection](docs/13-manual-service-management.md#3-chaos-management-routers)**: Watch how we inject hardware faults using the Chaos Proxy.
+
+https://github.com/user-attachments/assets/6a603b2f-0a0e-4c74-ad5c-6f63d287dd30
 
 ---
 
 ## 🚀 Key Features
 
-- **⚡ Agentic AI Assistant**: A specialized Google ADK Agent that understands infrastructure, analyzes BigQuery telemetry, and identifies root causes in natural language.
-- **🌀 Chaos Management**: A dynamic proxy layer for real-time fault injection (thermal spikes, resource leaks, disk failures).
-- **📡 Redfish Emulation**: Scalable simulation of data center hardware using standard RESTful APIs.
-- **🚨 Intelligent Telemetry**: Built-in anomaly and trend detection that warns you of failures *before* they cross critical thresholds.
-- **📊 Unified Dashboard**: A premium Streamlit UI providing a single pane of glass for telemetry and AI interaction.
+| Feature | Description |
+| :--- | :--- |
+| **⚡ Agentic AI Assistant** | A specialized Google ADK Agent that understands infrastructure and analyzes BigQuery telemetry in natural language. |
+| **🌀 Chaos Management** | A dynamic proxy layer for real-time fault injection (thermal spikes, resource leaks, disk failures). |
+| **📡 Redfish Emulation** | Scalable simulation of data center hardware using standard RESTful APIs. |
+| **🚨 Intelligent Telemetry** | Built-in anomaly and trend detection that warns you of failures *before* they cross critical thresholds. |
+| **📊 Unified Dashboard** | A premium Streamlit UI providing a single pane of glass for telemetry and AI interaction. |
+
+---
+
+## 🛡️ Production Readiness
+NeurOps is built for more than just simulation. Every component is designed to consume real hardware data. To transition to production, simply swap the Redfish URLs in your `config.yaml` with your actual BMC (Baseboard Management Controller) endpoints.
+
+#### 🩹 Autonomous Remediation Hooks
+The **Auto-Healing** API endpoints provided in the Chaos Proxy are standardized hooks for production workloads. Engineers can tie their own automation logic (e.g., Ansible, Jenkins, or direct Redfish commands) to these endpoints.
 
 ---
 
@@ -72,8 +83,8 @@ make startneurops
 ```
 *This starts the simulators, proxy, intelligence collector, and chat UI.*
 
-### 3. Talk to your Infra
-Open `http://localhost:8501` to start chatting with **NeuroTalk**.
+> [!TIP]
+> Prefer a manual approach? We have a **[Video-Guided Manual Setup](docs/13-manual-service-management.md)** that walks you through every step! 📺
 
 ---
 
@@ -87,26 +98,19 @@ Open `http://localhost:8501` to start chatting with **NeuroTalk**.
 | **[🛠️ Setup Guide](docs/05-setup-guide.md)** | Detailed onboarding and environmental cleanup. |
 | **[📖 API Reference](docs/09-api-reference.md)** | Chaos Proxy and NeuroTalk API specs. |
 | **[🔍 Troubleshooting](docs/10-debugging-troubleshooting.md)** | Common errors, logs, and diagnostic commands. |
-| **[⚙️ Manual Management](docs/13-manual-service-management.md)** | Step-by-step commands to run services without the Makefile. |
-
-### Module Deep Dives
-- **[🕹️ Simulation Layer](docs/04-module-breakdown/simulation.md)**
-- **[📡 Telemetry Layer](docs/04-module-breakdown/telemetry.md)**
-- **[🧠 Interaction Layer](docs/04-module-breakdown/agents.md)**
+| **[⚙️ Manual Management](docs/13-manual-service-management.md)** | **Video-guided** commands to run services individually. |
 
 ---
 
 ## 🛠️ Tech Stack
-- **Backend**: Python 3.12, FastAPI, Uvicorn.
-- **AI/LLM**: Google Gemini 3 Flash, Google Agent Development Kit (ADK).
-- **Data**: Google Cloud Pub/Sub, BigQuery.
-- **Frontend**: Streamlit.
-- **Infra**: Docker Compose, Redfish (Sushy).
+- **Backend**: Python 3.12, FastAPI, Uvicorn
+- **AI/LLM**: Google Gemini 3 Flash, Google Agent Development Kit (ADK)
+- **Data**: Google Cloud Pub/Sub, BigQuery
+- **Frontend**: Streamlit
+- **Infra**: Docker Compose, Redfish (Sushy)
 
 ---
 
 ## 🤝 Contributing
 Ready to help? See our **[Contribution Guide](docs/11-contribution-guide.md)** for coding standards and development workflows.
 
----
-**Last Updated:** April 2026 | **Environment:** `mylab`
