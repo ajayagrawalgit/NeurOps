@@ -17,6 +17,8 @@ python neurosight/neurosight.py
 *Note: If you want to run it in the background, you can use `nohup` like this:*
 `nohup python neurosight/neurosight.py >> logs/neurosight.log 2>&1 &`
 
+https://github.com/user-attachments/assets/7d775823-8a78-44fd-8dfe-c8060136aa8d
+
 ### 🛑 To Stop:
 If you ran it in the foreground, just hit `Ctrl+C`. If it's in the background, you can find the process and kill it:
 ```bash
@@ -27,13 +29,17 @@ pkill -f neurosight.py
 
 ## 🐳 2. Neurosim (Redfish Simulators)
 These are the Docker containers that mimic real hardware.
+| Note: This is a development environment and hence, you will see development containers. But, NeurOps is all ready to take on the production workloads as this is already tested in a real world environments spanning accross different regions with 100+ hardware assets.
 
 ### 🚀 To Start:
 ```bash
-docker compose -f neurosim/docker-compose.yml up -d
+docker compose -f neurosim/docker-compose.yml up
 ```
 
-### 🛑 To Stop:
+https://github.com/user-attachments/assets/98b21de0-d63c-4c2e-b15e-5c4420671bed
+
+
+### 🛑 To Stop (Just press `Ctrl+C`. But, if running with `-d` then execute the below command inside the NeurOps repository):
 ```bash
 docker compose -f neurosim/docker-compose.yml down
 ```
