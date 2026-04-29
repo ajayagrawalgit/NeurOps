@@ -11,6 +11,8 @@
 
 NeurOps is a production-grade platform designed to bridge the gap between raw hardware telemetry and intelligent operational response. While this repository includes **Redfish Emulation** for rapid validation and chaos testing, the core architecture is engineered to scale across enterprise data centers, managing real-world hardware telemetry via standard Redfish APIs.
 
+https://github.com/user-attachments/assets/6a603b2f-0a0e-4c74-ad5c-6f63d287dd30
+
 ---
 
 ### 🛡️ Production Readiness
